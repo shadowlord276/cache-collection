@@ -7,6 +7,7 @@
 package com.evotek.cache.repository;
 
 import java.util.List;
+import java.util.Set;
 import org.springframework.cache.annotation.Cacheable;
 import com.evotek.cache.model.Staff;
 
@@ -20,14 +21,16 @@ public interface StaffRepository {
     /**
      * @return
      */
-    @Cacheable(cacheNames = "staff", key = "#root.target.KEY")
-    List<Staff> getAll();
+    @Cacheable(cacheNames = "list", key = "#root.target.KEY")
+    List<Staff> getList();
 
+    @Cacheable(cacheNames = "set", key = "#root.target.KEY")
+    Set<Staff> getSet();
     /**
      * @param id
      * @return
      */
-    @Cacheable(cacheNames = "staff", key = "#id")
+    @Cacheable(cacheNames = {"list", "set" }, key = "#id")
 //    @CacheUpdate(cacheNames = "staff", key = KEY)
     Staff findById(Integer id);
 }

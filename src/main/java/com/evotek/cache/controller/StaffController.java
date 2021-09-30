@@ -7,6 +7,7 @@
 package com.evotek.cache.controller;
 
 import java.util.List;
+import java.util.Set;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,9 +29,14 @@ import lombok.RequiredArgsConstructor;
 public class StaffController {
     private final StaffService staffService;
 
-    @GetMapping("/all")
-    public ResponseEntity<List<Staff>> getAll() {
-        return new ResponseEntity<List<Staff>>(this.staffService.getAll(), HttpStatus.OK);
+    @GetMapping("/list")
+    public ResponseEntity<List<Staff>> getList() {
+        return new ResponseEntity<List<Staff>>(this.staffService.getList(), HttpStatus.OK);
+    }
+    
+    @GetMapping("/set")
+    public ResponseEntity<Set<Staff>> getSet() {
+        return new ResponseEntity<Set<Staff>>(this.staffService.getSet(), HttpStatus.OK);
     }
     
     @GetMapping("/{id}")

@@ -7,6 +7,7 @@
 package com.evotek.cache.service;
 
 import java.util.List;
+import java.util.Set;
 import com.evotek.cache.model.Staff;
 
 /**
@@ -15,7 +16,9 @@ import com.evotek.cache.model.Staff;
  * @author LinhLH
  */
 public interface StaffService {
-    List<Staff> getAll();
+    List<Staff> getList();
+    
+    Set<Staff> getSet();
     
     Staff getById(Integer id);
 }
