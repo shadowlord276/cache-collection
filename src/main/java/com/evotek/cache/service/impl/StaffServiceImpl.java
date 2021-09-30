@@ -7,9 +7,11 @@
 package com.evotek.cache.service.impl;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import org.springframework.stereotype.Service;
 import com.evotek.cache.annotation.CacheCollection;
+import com.evotek.cache.annotation.CacheMap;
 import com.evotek.cache.model.Staff;
 import com.evotek.cache.repository.StaffRepository;
 import com.evotek.cache.service.StaffService;
@@ -46,13 +48,23 @@ public class StaffServiceImpl implements StaffService {
     }
     
     /**
+     * 
+     */
+    @Override
+    public Map<Integer, Staff> getMap() {
+        return this.staffRepository.getMap();
+    }
+    
+    /**
      * @param id
      * @return
      */
-    @CacheCollection(cacheNames = {"list", "set"}, key = KEY, compareProperties = "id")
+    @CacheCollection(cacheNames = {"list", "set"}, key = KEY, compareProperties = "id", condition = "#returnValue.id > 4")
+    @CacheMap(cacheNames = "map", key = KEY, keyExpression = "#returnValue.id")
     @Override
     public Staff getById(Integer id) {
         return this.staffRepository.findById(id);
     }
+
 
 }

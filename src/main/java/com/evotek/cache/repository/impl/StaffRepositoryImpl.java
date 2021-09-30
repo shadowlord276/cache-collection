@@ -1,14 +1,16 @@
 /*
  * StaffRepositoryImpl.java
  *
- * Copyright (C) 2021 by Evotek. All right reserved.
- * This software is the confidential and proprietary information of Evotek
+ * Copyright (C) 2021 by Evotek. All right reserved. This software is the confidential and proprietary information of
+ * Evotek
  */
 package com.evotek.cache.repository.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import org.springframework.stereotype.Repository;
 import com.evotek.cache.model.Staff;
@@ -25,32 +27,52 @@ public class StaffRepositoryImpl implements StaffRepository {
     @Override
     public List<Staff> getList() {
         List<Staff> results = new ArrayList<>();
-        
+
         results.add(new Staff(1, "Spring"));
         results.add(new Staff(2, "Summer"));
         results.add(new Staff(3, "Autumn"));
         results.add(new Staff(4, "Winter"));
-        
+
         return results;
     }
 
 
-    /* 
+    /*
      * (non-Javadoc)
+     * 
      * @see com.evotek.cache.repository.StaffRepository#getSet()
      */
     @Override
     public Set<Staff> getSet() {
         Set<Staff> results = new HashSet<>();
-        
+
         results.add(new Staff(1, "Spring"));
         results.add(new Staff(2, "Summer"));
         results.add(new Staff(3, "Autumn"));
         results.add(new Staff(4, "Winter"));
-        
+
         return results;
     }
-    
+
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.evotek.cache.repository.StaffRepository#getMap()
+     */
+    @Override
+    public Map<Integer, Staff> getMap() {
+        Map<Integer, Staff> results = new HashMap<>();
+
+        results.put(1, new Staff(1, "Spring"));
+        results.put(2, new Staff(2, "Summer"));
+        results.put(3, new Staff(3, "Autumn"));
+        results.put(4, new Staff(4, "Winter"));
+
+        return results;
+    }
+
+
     @Override
     public Staff findById(Integer id) {
         // TODO Auto-generated method stub

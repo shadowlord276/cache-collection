@@ -7,6 +7,7 @@
 package com.evotek.cache.controller;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +38,11 @@ public class StaffController {
     @GetMapping("/set")
     public ResponseEntity<Set<Staff>> getSet() {
         return new ResponseEntity<Set<Staff>>(this.staffService.getSet(), HttpStatus.OK);
+    }
+    
+    @GetMapping("/map")
+    public ResponseEntity<Map<Integer, Staff>> getMap() {
+        return new ResponseEntity<Map<Integer, Staff>>(this.staffService.getMap(), HttpStatus.OK);
     }
     
     @GetMapping("/{id}")

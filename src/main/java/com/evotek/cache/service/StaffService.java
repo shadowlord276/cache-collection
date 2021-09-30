@@ -1,12 +1,13 @@
 /*
  * StaffService.java
  *
- * Copyright (C) 2021 by Evotek. All right reserved.
- * This software is the confidential and proprietary information of Evotek
+ * Copyright (C) 2021 by Evotek. All right reserved. This software is the confidential and proprietary information of
+ * Evotek
  */
 package com.evotek.cache.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import com.evotek.cache.model.Staff;
 
@@ -17,8 +18,15 @@ import com.evotek.cache.model.Staff;
  */
 public interface StaffService {
     List<Staff> getList();
-    
+
     Set<Staff> getSet();
-    
+
+    /**
+     * @return
+     */
+    Map<Integer, Staff> getMap();
+
     Staff getById(Integer id);
+
+
 }
