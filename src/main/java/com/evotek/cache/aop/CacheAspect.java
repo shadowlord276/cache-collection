@@ -6,10 +6,8 @@
  */
 package com.evotek.cache.aop;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
@@ -37,7 +35,7 @@ public class CacheAspect {
 
     @AfterReturning(pointcut = "@annotation(cacheUpdate)", returning = "returnValue")
     public void cacheUpdate(final JoinPoint joinPoint, CacheCollection cacheUpdate,
-                    Object returnValue) {
+                    Object returnValue) throws Exception {
         _log.debug("cacheUpdate is called");
 
         String[] cacheNames = cacheUpdate.cacheNames();
@@ -47,8 +45,10 @@ public class CacheAspect {
         Class<?> _class = returnValue.getClass();
 
         for (String cacheName : cacheNames) {
+            // get cache by cache name
             Cache cache = this.cacheManager.getCache(cacheName);
 
+            // if cache is null, do nothing
             if (cache == null) {
                 continue;
             }
@@ -65,7 +65,8 @@ public class CacheAspect {
             if (Collection.class.isAssignableFrom(ob.getClass().getSuperclass())) {
                 Iterator<?> iterator = ((Collection<?>) ob).iterator();
 
-                List<Object> newList = new ArrayList<>();
+                // Create new instance of object
+                Collection<Object> newCollection = (Collection<Object>) ob.getClass().newInstance();
 
                 while (iterator.hasNext()) {
                     Object c = iterator.next();
@@ -75,17 +76,19 @@ public class CacheAspect {
                     }
 
                     if (!compare(c, returnValue, compareProperties)) {
-                        newList.add(c);
+                        newCollection.add(c);
 
+                        // if iterator has next element, continue the loop while. If not it means the returnValue is the
+                        // new one. It will be add to the cache.
                         if (iterator.hasNext()) {
                             continue;
                         }
                     }
 
-                    newList.add(returnValue);
+                    newCollection.add(returnValue);
                 }
                 
-                cache.put(key, newList);
+                cache.put(key, newCollection);
             }
         }
     }
