@@ -22,6 +22,7 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.stereotype.Component;
 import com.evotek.cache.annotation.CacheCollection;
 import com.evotek.cache.annotation.CacheMap;
+import com.evotek.cache.annotation.CacheUpdate;
 import com.evotek.cache.util.ReflectionUtil;
 import com.evotek.cache.util.Validator;
 import lombok.RequiredArgsConstructor;
@@ -182,6 +183,22 @@ public class CacheAspect {
         }
     }
     
+    @AfterReturning(pointcut = "@annotation(cacheUpdate)", returning = "returnValue")
+    public void cacheUpdate(final JoinPoint joinPoint, CacheUpdate cacheUpdate,
+                    Object returnValue) throws Exception {
+        _log.debug("cacheUpdate has been called");
+        
+        CacheCollection[] collections = cacheUpdate.collection();
+        CacheMap[] maps = cacheUpdate.map();
+        
+        for (CacheCollection collection: collections) {
+            this.cacheCollectionUpdate(joinPoint, collection, returnValue);
+        }
+        
+        for (CacheMap map: maps) {
+            this.cacheMapUpdate(joinPoint, map, returnValue);
+        }
+    }
     /**
      * @param object
      * @param returnValue

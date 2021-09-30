@@ -12,6 +12,7 @@ import java.util.Set;
 import org.springframework.stereotype.Service;
 import com.evotek.cache.annotation.CacheCollection;
 import com.evotek.cache.annotation.CacheMap;
+import com.evotek.cache.annotation.CacheUpdate;
 import com.evotek.cache.model.Staff;
 import com.evotek.cache.repository.StaffRepository;
 import com.evotek.cache.service.StaffService;
@@ -26,7 +27,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class StaffServiceImpl implements StaffService {
     public static final String KEY = "key";
-    
+
     private final StaffRepository staffRepository;
 
     /**
@@ -46,7 +47,7 @@ public class StaffServiceImpl implements StaffService {
     public Set<Staff> getSet() {
         return this.staffRepository.getSet();
     }
-    
+
     /**
      * 
      */
@@ -54,13 +55,21 @@ public class StaffServiceImpl implements StaffService {
     public Map<Integer, Staff> getMap() {
         return this.staffRepository.getMap();
     }
-    
+
     /**
      * @param id
      * @return
      */
-    @CacheCollection(cacheNames = {"list", "set"}, key = KEY, compareProperties = "id", condition = "#returnValue.id > 4")
-    @CacheMap(cacheNames = "map", key = KEY, keyExpression = "#returnValue.id")
+    // @CacheCollection(cacheNames = {"list", "set"}, key = KEY, compareProperties = "id", condition = "#returnValue.id
+    // > 4")
+    // @CacheMap(cacheNames = "map", key = KEY, keyExpression = "#returnValue.id")
+    @CacheUpdate(
+                    collection = {
+                                    @CacheCollection(cacheNames = {"list", "set"}, key = KEY, compareProperties = "id",
+                                    condition = "#returnValue.id > 4")},
+                    map = {
+                                    @CacheMap(cacheNames = "map", key = KEY, keyExpression = "#returnValue.id")
+                    })
     @Override
     public Staff getById(Integer id) {
         return this.staffRepository.findById(id);
