@@ -1,0 +1,85 @@
+{
+	"info": {
+		"_postman_id": "5b44d148-d1ad-4567-b0ad-abf5cb5466fa",
+		"name": "Staff",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get List Of Staff",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{local}}/api/staff/list",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"api",
+						"staff",
+						"list"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Set Of Staff",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{local}}/api/staff/set",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"api",
+						"staff",
+						"set"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Map Of Staff",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{local}}/api/staff/map",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"api",
+						"staff",
+						"map"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Staff by ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{local}}/api/staff/5",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"api",
+						"staff",
+						"5"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
