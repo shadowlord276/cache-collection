@@ -82,7 +82,7 @@
 			"response": []
 		},
 		{
-			"name": "Get Staff by ID",
+			"name": "Delete Staff by ID",
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -96,6 +96,25 @@
 						"staff",
 						"delete",
 						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get one dept",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{local}}/api/deparment/get-one",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"api",
+						"deparment",
+						"get-one"
 					]
 				}
 			},

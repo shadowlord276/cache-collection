@@ -7,6 +7,7 @@
 package com.evotek.cache.repository.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -77,6 +78,17 @@ public class StaffRepositoryImpl implements StaffRepository {
     public Staff findById(Integer id) {
         // TODO Auto-generated method stub
         return new Staff(id, "Another Season" + String.valueOf(id));
+    }
+
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.evotek.cache.repository.StaffRepository#getStaffIds()
+     */
+    @Override
+    public List<Integer> getStaffIds() {
+        return new ArrayList<>(Arrays.asList(1, 2, 3, 4));
     }
 
 

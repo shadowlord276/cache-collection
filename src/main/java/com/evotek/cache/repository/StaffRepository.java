@@ -75,4 +75,9 @@ public interface StaffRepository {
     default Staff deleteById(Integer id) {
         return new Staff(id);
     }
+
+    /**
+     * @return
+     */
+    List<Integer> getStaffIds();
 }
