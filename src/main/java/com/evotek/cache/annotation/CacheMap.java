@@ -39,7 +39,7 @@ public @interface CacheMap {
     /**
      * The key of the map create from Spring Expression Language (SpEL)
      */
-    String keyExpression();
+    String keyMap();
     
     /**
      * The condition has been checked before update the cache. The condition uses Spring Expression Language (SpEL)

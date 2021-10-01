@@ -64,7 +64,7 @@ public class StaffServiceImpl implements StaffService {
 //                                    @CacheCollection(cacheNames = {"list", "set"}, key = KEY, compareProperties = "id",
 //                                    condition = "#returnValue.id > 4")},
 //                    map = {
-//                                    @CacheMap(cacheNames = "map", key = KEY, keyExpression = "#returnValue.id")
+//                                    @CacheMap(cacheNames = "map", key = KEY, keyMap = "#returnValue.id")
 //                    })
     @Override
     public Staff getById(Integer id) {

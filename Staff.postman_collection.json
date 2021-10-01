@@ -68,14 +68,34 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{local}}/api/staff/5",
+					"raw": "{{local}}/api/staff/4",
 					"host": [
 						"{{local}}"
 					],
 					"path": [
 						"api",
 						"staff",
-						"5"
+						"4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Staff by ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{local}}/api/staff/delete/1",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"api",
+						"staff",
+						"delete",
+						"1"
 					]
 				}
 			},

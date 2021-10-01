@@ -48,13 +48,13 @@ public interface StaffRepository {
     Staff findById(Integer id);
 
 //     @CacheCollection(cacheNames = {"list", "set"}, key = KEY, compareProperties = "id", condition = "#returnValue.id > 4")
-//     @CacheMap(cacheNames = "map", key = KEY, keyExpression = "#returnValue.id")
+//     @CacheMap(cacheNames = "map", key = KEY, keyMap = "#returnValue.id")
     @CacheUpdate(
                     collection = {
                                     @CacheCollection(cacheNames = {"list", "set"}, key = KEY, compareProperties = "id",
                                     condition = "#returnValue.id > 2")},
                     map = {
-                                    @CacheMap(cacheNames = "map", key = KEY, keyExpression = "#returnValue.id")
+                                    @CacheMap(cacheNames = "map", key = KEY, keyMap = "#returnValue.id")
                     })
     default Staff _findById(Integer id) {
         return findById(id);
@@ -69,7 +69,7 @@ public interface StaffRepository {
                                     @CacheCollection(cacheNames = {"list", "set"}, key = KEY, compareProperties = "id",
                                     condition = "#returnValue.id < 2", action = CacheAction.EVICT)},
                     map = {
-                                    @CacheMap(cacheNames = "map", key = KEY, keyExpression = "#returnValue.id", 
+                                    @CacheMap(cacheNames = "map", key = KEY, keyMap = "#returnValue.id", 
                                                     action = CacheAction.EVICT)
                     })
     default Staff deleteById(Integer id) {

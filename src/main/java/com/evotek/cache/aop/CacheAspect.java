@@ -12,6 +12,7 @@ import java.util.Map;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.cache.Cache;
 import org.springframework.cache.Cache.ValueWrapper;
 import org.springframework.cache.CacheManager;
@@ -62,9 +63,7 @@ public class CacheAspect {
         if (Validator.isNotNull(condition)) {
             ExpressionParser parser = new SpelExpressionParser();
 
-            StandardEvaluationContext context = new StandardEvaluationContext(returnValue);
-            
-            context.setVariable("returnValue", returnValue);
+            StandardEvaluationContext context = getEvaluationContext(returnValue, joinPoint);
 
             Expression exp = parser.parseExpression(condition);
 
@@ -141,15 +140,13 @@ public class CacheAspect {
         
         String[] cacheNames = cacheMap.cacheNames();
         String key = cacheMap.key();
-        String keyExpression = cacheMap.keyExpression();
+        String keyExpression = cacheMap.keyMap();
         String condition = cacheMap.condition();
         CacheAction action = cacheMap.action();
         
         ExpressionParser parser = new SpelExpressionParser();
 
-        StandardEvaluationContext context = new StandardEvaluationContext(returnValue);
-        
-        context.setVariable("returnValue", returnValue);
+        StandardEvaluationContext context = getEvaluationContext(returnValue, joinPoint);
 
         if (Validator.isNotNull(condition)) {
             Expression conditionExp = parser.parseExpression(condition);
@@ -235,5 +232,29 @@ public class CacheAspect {
         }
 
         return true;
+    }
+    
+    private StandardEvaluationContext getEvaluationContext(Object returnValue, final JoinPoint joinPoint) {
+        StandardEvaluationContext context = new StandardEvaluationContext(returnValue);
+
+        context.setVariable("returnValue", returnValue);
+
+        MethodSignature sign = (MethodSignature) joinPoint.getSignature();
+
+        String[] parameterNames = sign.getParameterNames();
+
+        Object[] args = joinPoint.getArgs();
+
+        if (Validator.isNotNull(parameterNames)) {
+            for (int i = 0; i < parameterNames.length; i++) {
+                String parameterName = parameterNames[i];
+
+                if (i < args.length) {
+                    context.setVariable(parameterName, args[i]);
+                }
+            }
+        }
+
+        return context;
     }
 }
