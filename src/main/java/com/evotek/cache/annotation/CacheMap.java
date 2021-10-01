@@ -46,4 +46,6 @@ public @interface CacheMap {
      * @return
      */
     String condition() default "";
+    
+    CacheAction action() default CacheAction.PUT;
 }

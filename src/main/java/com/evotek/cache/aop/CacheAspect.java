@@ -20,6 +20,7 @@ import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.stereotype.Component;
+import com.evotek.cache.annotation.CacheAction;
 import com.evotek.cache.annotation.CacheCollection;
 import com.evotek.cache.annotation.CacheMap;
 import com.evotek.cache.annotation.CacheUpdate;
@@ -56,6 +57,7 @@ public class CacheAspect {
         String key = cacheCollection.key();
         String[] compareProperties = cacheCollection.compareProperties();
         String condition = cacheCollection.condition();
+        CacheAction action = cacheCollection.action();
         
         if (Validator.isNotNull(condition)) {
             ExpressionParser parser = new SpelExpressionParser();
@@ -85,14 +87,14 @@ public class CacheAspect {
             }
 
             ValueWrapper valueWrapper = cache.get(key);
-            
+
             // if nothing in cache, do nothing
             if (valueWrapper == null) {
                 return;
             }
 
             Object ob = valueWrapper.get();
-            
+
             if (Collection.class.isAssignableFrom(ob.getClass().getSuperclass())) {
                 Iterator<?> iterator = ((Collection<?>) ob).iterator();
 
@@ -100,10 +102,10 @@ public class CacheAspect {
                 Collection<Object> newCollection = (Collection<Object>) ob.getClass().newInstance();
 
                 boolean found = false;
-                
+
                 while (iterator.hasNext()) {
                     Object c = iterator.next();
-                    
+
                     if (!_class.isAssignableFrom(c.getClass())) {
                         break;
                     }
@@ -113,14 +115,20 @@ public class CacheAspect {
                     } else {
                         found = true;
                         
-                        newCollection.add(returnValue);
+                        // if action = PUT, replace the found item with the new one
+                        // if action = EVICT, ignore the found item
+                        if (action == CacheAction.PUT) {
+                            newCollection.add(returnValue);
+                        }
                     }
                 }
-                
-                if (!found) {
+
+                // if action = PUT and the match item could not be found, add the new one to the collection 
+                if (!found && action == CacheAction.PUT) {
                     newCollection.add(returnValue);
                 }
-                
+
+                // put the collection to the cache
                 cache.put(key, newCollection);
             }
         }
@@ -135,6 +143,7 @@ public class CacheAspect {
         String key = cacheMap.key();
         String keyExpression = cacheMap.keyExpression();
         String condition = cacheMap.condition();
+        CacheAction action = cacheMap.action();
         
         ExpressionParser parser = new SpelExpressionParser();
 
@@ -178,8 +187,15 @@ public class CacheAspect {
 
                 Map<Object, Object> mapOb = (Map<Object, Object>) ob;
                 
-                mapOb.put(keyValue, returnValue);
+                if (action == CacheAction.PUT) {
+                    // if the match item has be found, replace it with the new one
+                    mapOb.put(keyValue, returnValue);
+                } else if (action == CacheAction.EVICT) {
+                    // if the match item has be found, remove it
+                    mapOb.remove(keyValue);
+                }
                 
+                // replace the map to the cache
                 cache.put(key, mapOb);
             }
         }

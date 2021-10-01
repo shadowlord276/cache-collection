@@ -71,5 +71,10 @@ public class StaffServiceImpl implements StaffService {
         return this.staffRepository._findById(id);
     }
 
+    @Override
+    public Staff deleteById(Integer id) {
+        return this.staffRepository.deleteById(id);
+    }
+
 
 }

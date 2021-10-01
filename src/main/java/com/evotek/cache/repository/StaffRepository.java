@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.springframework.cache.annotation.Cacheable;
+import com.evotek.cache.annotation.CacheAction;
 import com.evotek.cache.annotation.CacheCollection;
 import com.evotek.cache.annotation.CacheMap;
 import com.evotek.cache.annotation.CacheUpdate;
@@ -57,5 +58,21 @@ public interface StaffRepository {
                     })
     default Staff _findById(Integer id) {
         return findById(id);
+    }
+
+    /**
+     * @param id
+     * @return
+     */
+    @CacheUpdate(
+                    collection = {
+                                    @CacheCollection(cacheNames = {"list", "set"}, key = KEY, compareProperties = "id",
+                                    condition = "#returnValue.id < 2", action = CacheAction.EVICT)},
+                    map = {
+                                    @CacheMap(cacheNames = "map", key = KEY, keyExpression = "#returnValue.id", 
+                                                    action = CacheAction.EVICT)
+                    })
+    default Staff deleteById(Integer id) {
+        return new Staff(id);
     }
 }

@@ -48,4 +48,6 @@ public @interface CacheCollection {
      * @return
      */
     String condition() default "";
+    
+    CacheAction action() default CacheAction.PUT;
 }

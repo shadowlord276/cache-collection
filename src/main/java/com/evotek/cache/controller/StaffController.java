@@ -49,4 +49,9 @@ public class StaffController {
     public ResponseEntity<Staff> getById (@PathVariable Integer id) {
         return new ResponseEntity<Staff> (this.staffService.getById(id), HttpStatus.OK);
     }
+    
+    @GetMapping("/delete/{id}")
+    public ResponseEntity<Staff> deleteById (@PathVariable Integer id) {
+        return new ResponseEntity<Staff> (this.staffService.deleteById(id), HttpStatus.OK);
+    }
 }
