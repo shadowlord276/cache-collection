@@ -99,6 +99,8 @@ public class CacheAspect {
                 // Create new instance of object
                 Collection<Object> newCollection = (Collection<Object>) ob.getClass().newInstance();
 
+                boolean found = false;
+                
                 while (iterator.hasNext()) {
                     Object c = iterator.next();
                     
@@ -108,14 +110,14 @@ public class CacheAspect {
 
                     if (!compare(c, returnValue, compareProperties)) {
                         newCollection.add(c);
-
-                        // if iterator has next element, continue the loop while. If not it means the returnValue is the
-                        // new one. It will be add to the cache.
-                        if (iterator.hasNext()) {
-                            continue;
-                        }
+                    } else {
+                        found = true;
+                        
+                        newCollection.add(returnValue);
                     }
-
+                }
+                
+                if (!found) {
                     newCollection.add(returnValue);
                 }
                 
