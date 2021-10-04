@@ -55,7 +55,7 @@ public interface StaffRepository {
 //     @CacheMap(cacheNames = "map", key = KEY, keyMap = "#returnValue.id")
     @CacheUpdate(
                     collection = {
-                                    @CacheCollection(cacheNames = {"list", "set", "save"}, key = "{#returnValue.id, #returnValue.name}", compareProperties = "id",
+                                    @CacheCollection(cacheNames = {"list", "set", "save"}, key = "#target.KEY", compareProperties = "id",
                                     condition = "#returnValue.id > 2")},
                     map = {
                                     @CacheMap(cacheNames = "map", key = "#target.KEY", keyMap = "#returnValue.id")

@@ -250,6 +250,7 @@ public class CacheAspect {
     private StandardEvaluationContext getEvaluationContext(Object returnValue, final JoinPoint joinPoint) throws Exception {
         StandardEvaluationContext context = new StandardEvaluationContext(returnValue);
 
+        // set return valua to variables context
         context.setVariable("returnValue", returnValue);
 
         MethodSignature sign = (MethodSignature) joinPoint.getSignature();
@@ -258,12 +259,14 @@ public class CacheAspect {
 
         Object[] args = joinPoint.getArgs();
         
+        // get join point target class name 
         String target = sign.getDeclaringTypeName();
         
         Class<?> clazz = Class.forName(target);
         
         context.setVariable("target", clazz);
 
+        // add parameters to variables context
         if (Validator.isNotNull(parameterNames)) {
             for (int i = 0; i < parameterNames.length; i++) {
                 String parameterName = parameterNames[i];
