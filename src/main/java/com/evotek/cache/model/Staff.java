@@ -9,6 +9,7 @@ package com.evotek.cache.model;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 29/09/2021 - LinhLH: Create new
@@ -17,6 +18,7 @@ import lombok.Data;
  */
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class Staff implements Serializable {
     /** The Constant serialVersionUID */
     private static final long serialVersionUID = -210681766206697311L;
@@ -33,5 +35,5 @@ public class Staff implements Serializable {
         this.id = id;
     }
 
-
+    
 }

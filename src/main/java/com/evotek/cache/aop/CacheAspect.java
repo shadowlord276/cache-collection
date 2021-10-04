@@ -55,25 +55,32 @@ public class CacheAspect {
         _log.debug("cacheCollectionUpdate has been called");
 
         String[] cacheNames = cacheCollection.cacheNames();
-        String key = cacheCollection.key();
+        String keyExpression = cacheCollection.key();
         String[] compareProperties = cacheCollection.compareProperties();
         String condition = cacheCollection.condition();
         CacheAction action = cacheCollection.action();
         
+        ExpressionParser parser = new SpelExpressionParser();
+
+        StandardEvaluationContext context = getEvaluationContext(returnValue, joinPoint);
+        
+        // get and check condition value
         if (Validator.isNotNull(condition)) {
-            ExpressionParser parser = new SpelExpressionParser();
 
-            StandardEvaluationContext context = getEvaluationContext(returnValue, joinPoint);
+            Expression conditionExp = parser.parseExpression(condition);
 
-            Expression exp = parser.parseExpression(condition);
-
-            boolean conditionResult = exp.getValue(context, Boolean.class);
+            boolean conditionResult = conditionExp.getValue(context, Boolean.class);
 
             if (!conditionResult) {
                 return;
             }
         }
 
+        // get key value
+        Expression keyExp = parser.parseExpression(keyExpression);
+        
+        Object keyValue = keyExp.getValue(context);
+        
         Class<?> _class = returnValue.getClass();
 
         for (String cacheName : cacheNames) {
@@ -85,7 +92,7 @@ public class CacheAspect {
                 continue;
             }
 
-            ValueWrapper valueWrapper = cache.get(key);
+            ValueWrapper valueWrapper = cache.get(keyValue);
 
             // if nothing in cache, do nothing
             if (valueWrapper == null) {
@@ -128,7 +135,7 @@ public class CacheAspect {
                 }
 
                 // put the collection to the cache
-                cache.put(key, newCollection);
+                cache.put(keyValue, newCollection);
             }
         }
     }
@@ -139,8 +146,8 @@ public class CacheAspect {
         _log.debug("cacheMapUpdate has been called");
         
         String[] cacheNames = cacheMap.cacheNames();
-        String key = cacheMap.key();
-        String keyExpression = cacheMap.keyMap();
+        String keyCacheExpression = cacheMap.key();
+        String keyMapExpression = cacheMap.keyMap();
         String condition = cacheMap.condition();
         CacheAction action = cacheMap.action();
         
@@ -158,9 +165,15 @@ public class CacheAspect {
             }
         }
 
-        Expression keyExp = parser.parseExpression(keyExpression);
+        // get key value
+        Expression keyCacheExp = parser.parseExpression(keyCacheExpression);
         
-        Object keyValue = keyExp.getValue(context);
+        Object keyCacheValue = keyCacheExp.getValue(context);
+        
+        // get key map
+        Expression keyMapExp = parser.parseExpression(keyMapExpression);
+        
+        Object keyMapValue = keyMapExp.getValue(context);
 
         for (String cacheName : cacheNames) {
             // get cache by cache name
@@ -171,7 +184,7 @@ public class CacheAspect {
                 continue;
             }
 
-            ValueWrapper valueWrapper = cache.get(key);
+            ValueWrapper valueWrapper = cache.get(keyCacheValue);
             
             // if nothing in cache, do nothing
             if (valueWrapper == null) {
@@ -186,14 +199,14 @@ public class CacheAspect {
                 
                 if (action == CacheAction.PUT) {
                     // if the match item has be found, replace it with the new one
-                    mapOb.put(keyValue, returnValue);
+                    mapOb.put(keyMapValue, returnValue);
                 } else if (action == CacheAction.EVICT) {
                     // if the match item has be found, remove it
-                    mapOb.remove(keyValue);
+                    mapOb.remove(keyMapValue);
                 }
                 
                 // replace the map to the cache
-                cache.put(key, mapOb);
+                cache.put(keyCacheValue, mapOb);
             }
         }
     }
@@ -234,7 +247,7 @@ public class CacheAspect {
         return true;
     }
     
-    private StandardEvaluationContext getEvaluationContext(Object returnValue, final JoinPoint joinPoint) {
+    private StandardEvaluationContext getEvaluationContext(Object returnValue, final JoinPoint joinPoint) throws Exception {
         StandardEvaluationContext context = new StandardEvaluationContext(returnValue);
 
         context.setVariable("returnValue", returnValue);
@@ -244,6 +257,12 @@ public class CacheAspect {
         String[] parameterNames = sign.getParameterNames();
 
         Object[] args = joinPoint.getArgs();
+        
+        String target = sign.getDeclaringTypeName();
+        
+        Class<?> clazz = Class.forName(target);
+        
+        context.setVariable("target", clazz);
 
         if (Validator.isNotNull(parameterNames)) {
             for (int i = 0; i < parameterNames.length; i++) {

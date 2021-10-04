@@ -34,5 +34,11 @@ public interface StaffService {
      */
     Staff deleteById(Integer id);
 
+    /**
+     * @param staff
+     * @return
+     */
+    Staff add(Staff staff);
+
 
 }

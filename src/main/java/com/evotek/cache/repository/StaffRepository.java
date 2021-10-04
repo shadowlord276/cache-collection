@@ -40,6 +40,10 @@ public interface StaffRepository {
     @Cacheable(cacheNames = "map", key = "#root.target.KEY")
     Map<Integer, Staff> getMap();
 
+    @Cacheable(cacheNames = "save", key = "{#staff.id, #staff.name}")
+    default Staff save(Staff staff) {
+        return staff;
+    }
     /**
      * @param id
      * @return
@@ -51,10 +55,10 @@ public interface StaffRepository {
 //     @CacheMap(cacheNames = "map", key = KEY, keyMap = "#returnValue.id")
     @CacheUpdate(
                     collection = {
-                                    @CacheCollection(cacheNames = {"list", "set"}, key = KEY, compareProperties = "id",
+                                    @CacheCollection(cacheNames = {"list", "set", "save"}, key = "{#returnValue.id, #returnValue.name}", compareProperties = "id",
                                     condition = "#returnValue.id > 2")},
                     map = {
-                                    @CacheMap(cacheNames = "map", key = KEY, keyMap = "#returnValue.id")
+                                    @CacheMap(cacheNames = "map", key = "#target.KEY", keyMap = "#returnValue.id")
                     })
     default Staff _findById(Integer id) {
         return findById(id);
@@ -66,10 +70,10 @@ public interface StaffRepository {
      */
     @CacheUpdate(
                     collection = {
-                                    @CacheCollection(cacheNames = {"list", "set"}, key = KEY, compareProperties = "id",
+                                    @CacheCollection(cacheNames = {"list", "set", "save"}, key = "#target.KEY", compareProperties = "id",
                                     condition = "#returnValue.id < 2", action = CacheAction.EVICT)},
                     map = {
-                                    @CacheMap(cacheNames = "map", key = KEY, keyMap = "#returnValue.id", 
+                                    @CacheMap(cacheNames = "map", key = "#target.KEY", keyMap = "#returnValue.id", 
                                                     action = CacheAction.EVICT)
                     })
     default Staff deleteById(Integer id) {

@@ -76,5 +76,10 @@ public class StaffServiceImpl implements StaffService {
         return this.staffRepository.deleteById(id);
     }
 
+    @Override
+    public Staff add(Staff staff) {
+        return this.staffRepository.save(staff);
+    }
+
 
 }
