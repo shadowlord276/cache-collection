@@ -250,7 +250,7 @@ public class CacheAspect {
     private StandardEvaluationContext getEvaluationContext(Object returnValue, final JoinPoint joinPoint) throws Exception {
         StandardEvaluationContext context = new StandardEvaluationContext(returnValue);
 
-        // set return valua to variables context
+        // set return value to variables context
         context.setVariable("returnValue", returnValue);
 
         MethodSignature sign = (MethodSignature) joinPoint.getSignature();
